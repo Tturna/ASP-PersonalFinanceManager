@@ -1,0 +1,12 @@
+﻿@model PersonalFinances.Models.DataTransferObjects.TransactionDto
+
+@{
+    ViewBag.Title = "Add Income";
+    Layout = "_Layout";
+}
+
+<h2>Add Income</h2>
+
+<form asp-action="AddIncome">
+    <input type="hidden" asp-for="IsIncome" value="true" />
+</form>

@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Add Expense";
+    Layout = "_Layout";
+}
+
+<h2>Add Expense</h2>
+
+<form asp-action="AddExpense">
+    <input type="hidden" asp-for="IsIncome" value="false" />
+</form>

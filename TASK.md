@@ -3,17 +3,17 @@
 The aim is to utilize each and every phase we've gone through, meaning that you will have:
 
     .NET Core MVC Application, that includes
-    Routing
-    Authorization
-    Authentication
-    Model passing to views
+    ✔️Routing
+    ✔️Authorization
+    ✔️Authentication
+    ✔️Model passing to views
     Viewmodels
-    Form validation (Model attribute based)
-    Anti-forgery token validation
+    ✔️Form validation (Model attribute based)
+    ✔️Anti-forgery token validation
     Partial views
     Ajax call
     Data visualization library
-    A database (SQL or Mongo)
+    ✔️A database (SQL or Mongo)
     Optional: Blazor component
 
 Your goal is to create a personal finance tracker software.
