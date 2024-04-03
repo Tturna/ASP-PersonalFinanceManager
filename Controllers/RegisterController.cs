@@ -34,7 +34,7 @@ public class RegisterController(AppDbContext dbContext, HashingService hashingSe
         var newUser = new UserModel
         {
             Username = registerData.Username,
-            Password = passwordHash,
+            PasswordHash = passwordHash,
             CreatedAt = DateTime.Now
         };
 

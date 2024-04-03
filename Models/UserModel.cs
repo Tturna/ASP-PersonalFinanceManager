@@ -8,6 +8,6 @@ public class UserModel
     public int Id { get; set; }
     [StringLength(20)]
     public required string Username { get; set; }
-    public required byte[] Password { get; set; }
+    public required byte[] PasswordHash { get; set; }
     public DateTime CreatedAt { get; set; }
 }
