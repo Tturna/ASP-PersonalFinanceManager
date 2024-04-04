@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonalFinances.Models;
 using PersonalFinances.Models.DataTransferObjects;
+using PersonalFinances.Models.ViewModels;
 using PersonalFinances.Services;
 
 namespace PersonalFinances.Controllers;
@@ -16,16 +17,26 @@ public class FinanceController(AppDbContext dbContext) : Controller
         var userName = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         // user can't be null because of the [Authorize] attribute
-        var userWithTransactions = dbContext.Users
-            .Include(u => u.TransactionModels)
-            .FirstOrDefault(u => u.Username == userName);
+        var userTransactions = dbContext.Transactions
+            .Include(t => t.UserModel)
+            .Where(t => t.UserModel.Username == userName)
+            .ToList();
+        
+        var incomeTransactions = userTransactions.Where(t => t.IsIncome).ToList();
+        var expenseTransactions = userTransactions.Where(t => !t.IsIncome).ToList();
 
-        return View(userWithTransactions!.TransactionModels);
+        var financeViewModel = new FinanceViewModel()
+        {
+            IncomeTransactions = incomeTransactions,
+            ExpenseTransactions = expenseTransactions
+        };
+
+        return View(financeViewModel);
     }
 
     public IActionResult AddTransaction()
     {
-        return View(new TransactionDto());
+        return View();
     }
 
     [HttpPost]
@@ -61,7 +72,7 @@ public class FinanceController(AppDbContext dbContext) : Controller
             Name = transactionData.Name,
             AmountEuro = transactionData.AmountEuro,
             Category = transactionData.Category,
-            Reoccurrance = transactionData.Reoccurrence,
+            Reoccurrence = transactionData.Reoccurrence,
         };
 
         dbContext.Transactions.Add(newTransaction);

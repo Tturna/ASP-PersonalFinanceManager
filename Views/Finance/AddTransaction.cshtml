@@ -1,4 +1,5 @@
-﻿@model PersonalFinances.Models.DataTransferObjects.TransactionDto
+﻿@using PersonalFinances.Models.DataTransferObjects
+@model TransactionDto?
 
 @{
     ViewBag.Title = "Add Transaction";
@@ -10,7 +11,7 @@
 <form asp-action="AddTransaction">
     <div class="my-3">
         <label asp-for="IsIncome" class="form-check-label">Transaction type</label>
-        <select asp-for="IsIncome" asp-items="Model.IsIncomeOptions"></select>
+        <select asp-for="IsIncome" asp-items="TransactionDto.IsIncomeOptions"></select>
         @* <span asp-validation-for="IsIncome" class="text-danger"></span> *@
     </div>
     <div class="form-floating mb-3">
@@ -30,7 +31,7 @@
     </div>
     <div class="mb-3">
         <label asp-for="Reoccurrence"></label>
-        <select asp-for="Reoccurrence" asp-items="Model.ReoccurrenceOptions"></select>
+        <select asp-for="Reoccurrence" asp-items="TransactionDto.ReoccurrenceOptions"></select>
         <span asp-validation-for="Reoccurrence" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Add Transaction</button>

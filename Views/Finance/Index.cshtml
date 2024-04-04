@@ -1,4 +1,4 @@
-﻿@model List<TransactionModel>
+﻿@model PersonalFinances.Models.ViewModels.FinanceViewModel
 
 @{
     ViewBag.Title = "Finances";
@@ -9,23 +9,45 @@
 
 <a asp-action="AddTransaction" class="btn btn-primary my-3">Add Income or Expense</a>
 
+<h3>Income</h3>
+
 <table class="table table-bordered">
     <thead>
     <tr>
         <th>Name</th>
         <th>Category</th>
         <th>Amount</th>
-        <th>Is Income</th>
     </tr>
     </thead>
     <tbody>
-        @foreach (var transaction in Model)
+    @foreach (var transaction in Model.IncomeTransactions)
+    {
+        <tr>
+            <td>@transaction.Name</td>
+            <td>@transaction.Category</td>
+            <td>@transaction.AmountEuro.ToString("F2") €</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<h3>Expenses</h3>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model.ExpenseTransactions)
         {
             <tr>
                 <td>@transaction.Name</td>
                 <td>@transaction.Category</td>
-                <td>@transaction.AmountEuro €</td>
-                <td>@transaction.IsIncome</td>
+                <td>@transaction.AmountEuro.ToString("F2") €</td>
             </tr>
         }
     </tbody>

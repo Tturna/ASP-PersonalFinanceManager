@@ -4,7 +4,6 @@ namespace PersonalFinances.Models;
 
 public class UserModel
 {
-    [Key]
     public int Id { get; set; }
     [StringLength(20)]
     public required string Username { get; set; }
