@@ -17,10 +17,10 @@ public class FinanceController(AppDbContext dbContext) : Controller
 
         // user can't be null because of the [Authorize] attribute
         var userWithTransactions = dbContext.Users
-            .Include(u => u.Transactions)
+            .Include(u => u.TransactionModels)
             .FirstOrDefault(u => u.Username == userName);
 
-        return View(userWithTransactions!.Transactions);
+        return View(userWithTransactions!.TransactionModels);
     }
 
     public IActionResult AddTransaction()
@@ -41,10 +41,10 @@ public class FinanceController(AppDbContext dbContext) : Controller
 
         // user can't be null because of the [Authorize] attribute
         var userWithTransactions = dbContext.Users
-            .Include(u => u.Transactions)
+            .Include(u => u.TransactionModels)
             .FirstOrDefault(u => u.Username == userName);
 
-        var existingTransaction = userWithTransactions!.Transactions
+        var existingTransaction = userWithTransactions!.TransactionModels
             .FirstOrDefault(t => t.Name == transactionData.Name);
 
         if (existingTransaction != null)
@@ -55,8 +55,8 @@ public class FinanceController(AppDbContext dbContext) : Controller
 
         var newTransaction = new TransactionModel
         {
-            User = userWithTransactions,
-            UserId = userWithTransactions.Id,
+            UserModel = userWithTransactions,
+            UserModelId = userWithTransactions.Id,
             IsIncome = transactionData.IsIncome,
             Name = transactionData.Name,
             AmountEuro = transactionData.AmountEuro,

@@ -12,8 +12,8 @@ using PersonalFinances.Services;
 namespace PersonalFinances.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240404123036_CentsToEuros")]
-    partial class CentsToEuros
+    [Migration("20240404161031_Transactions")]
+    partial class Transactions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,10 +51,7 @@ namespace PersonalFinances.Migrations
                     b.Property<int?>("Reoccurrance")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserModelId")
+                    b.Property<int>("UserModelId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -93,7 +90,9 @@ namespace PersonalFinances.Migrations
                 {
                     b.HasOne("PersonalFinances.Models.UserModel", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("UserModelId");
+                        .HasForeignKey("UserModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PersonalFinances.Models.UserModel", b =>

@@ -7,7 +7,7 @@
 
 <h2>Finances</h2>
 
-<a asp-action="AddTransaction" class="btn btn-primary">Add Income or Expense</a>
+<a asp-action="AddTransaction" class="btn btn-primary my-3">Add Income or Expense</a>
 
 <table class="table table-bordered">
     <thead>
@@ -24,7 +24,7 @@
             <tr>
                 <td>@transaction.Name</td>
                 <td>@transaction.Category</td>
-                <td>@(transaction.AmountEuro / 100) €</td>
+                <td>@transaction.AmountEuro €</td>
                 <td>@transaction.IsIncome</td>
             </tr>
         }

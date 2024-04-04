@@ -5,12 +5,11 @@ namespace PersonalFinances.Models.DataTransferObjects;
 
 public class TransactionDto
 {
-    // hidden field
     [Required]
     public bool IsIncome { get; set; }
     
     [Required, DataType(DataType.Currency), Range(0, float.MaxValue)]
-    public float AmountEuro { get; set; }
+    public decimal AmountEuro { get; set; }
 
     [Required, MinLength(3), MaxLength(20)]
     public string Name { get; set; } = string.Empty;

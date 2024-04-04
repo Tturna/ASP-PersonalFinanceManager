@@ -2368,11 +2368,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\FullstackHAMK\\PersonalFinances\\PersonalFinances.csproj",
+      "projectUniqueName": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-PersonalFinanceManager\\PersonalFinances.csproj",
       "projectName": "PersonalFinances",
-      "projectPath": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\FullstackHAMK\\PersonalFinances\\PersonalFinances.csproj",
+      "projectPath": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-PersonalFinanceManager\\PersonalFinances.csproj",
       "packagesPath": "C:\\Users\\eemel\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\FullstackHAMK\\PersonalFinances\\obj\\",
+      "outputPath": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-PersonalFinanceManager\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\eemel\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2395,6 +2395,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2435,7 +2440,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

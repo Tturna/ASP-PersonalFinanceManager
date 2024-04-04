@@ -5,36 +5,30 @@
 namespace PersonalFinances.Migrations
 {
     /// <inheritdoc />
-    public partial class CentsToEuros : Migration
+    public partial class EuroFloatsToDecimals : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "AmountEuroCents",
-                table: "Transactions");
-
-            migrationBuilder.AddColumn<float>(
+            migrationBuilder.AlterColumn<decimal>(
                 name: "AmountEuro",
                 table: "Transactions",
-                type: "float",
+                type: "decimal(65,30)",
                 nullable: false,
-                defaultValue: 0f);
+                oldClrType: typeof(float),
+                oldType: "float");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            migrationBuilder.AlterColumn<float>(
                 name: "AmountEuro",
-                table: "Transactions");
-
-            migrationBuilder.AddColumn<int>(
-                name: "AmountEuroCents",
                 table: "Transactions",
-                type: "int",
+                type: "float",
                 nullable: false,
-                defaultValue: 0);
+                oldClrType: typeof(decimal),
+                oldType: "decimal(65,30)");
         }
     }
 }

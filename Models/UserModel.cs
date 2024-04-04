@@ -12,5 +12,5 @@ public class UserModel
     public DateTime CreatedAt { get; set; }
 
     // nav property
-    public List<TransactionModel> Transactions { get; set; } = [];
+    public List<TransactionModel> TransactionModels { get; set; } = [];
 }

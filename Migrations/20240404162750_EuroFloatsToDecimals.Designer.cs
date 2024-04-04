@@ -12,8 +12,8 @@ using PersonalFinances.Services;
 namespace PersonalFinances.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240404110319_Transactions")]
-    partial class Transactions
+    [Migration("20240404162750_EuroFloatsToDecimals")]
+    partial class EuroFloatsToDecimals
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,8 @@ namespace PersonalFinances.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AmountEuroCents")
-                        .HasColumnType("int");
+                    b.Property<decimal>("AmountEuro")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Category")
                         .HasMaxLength(20)
@@ -51,10 +51,7 @@ namespace PersonalFinances.Migrations
                     b.Property<int?>("Reoccurrance")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserModelId")
+                    b.Property<int>("UserModelId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -92,13 +89,15 @@ namespace PersonalFinances.Migrations
             modelBuilder.Entity("PersonalFinances.Models.TransactionModel", b =>
                 {
                     b.HasOne("PersonalFinances.Models.UserModel", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("UserModelId");
+                        .WithMany("TransactionModels")
+                        .HasForeignKey("UserModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PersonalFinances.Models.UserModel", b =>
                 {
-                    b.Navigation("Transactions");
+                    b.Navigation("TransactionModels");
                 });
 #pragma warning restore 612, 618
         }
