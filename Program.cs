@@ -4,13 +4,13 @@ using PersonalFinances.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the (service) container.
 builder.Services.AddControllersWithViews();
 
 var connectionString = builder.Configuration.GetConnectionString("MySql") ??
                        "Server=localhost;Database=finance;User=root;Password=root;";
 
-var serverVersion = ServerVersion.AutoDetect(connectionString);
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 34));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, serverVersion));

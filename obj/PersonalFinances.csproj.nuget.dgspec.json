@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Folders\\Stuffs\\Github Repositories\\ASP-PersonalFinanceManager\\PersonalFinances.csproj": {}
+    "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\FullstackHAMK\\PersonalFinances\\PersonalFinances.csproj": {}
   },
   "projects": {
-    "D:\\Folders\\Stuffs\\Github Repositories\\ASP-PersonalFinanceManager\\PersonalFinances.csproj": {
+    "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\FullstackHAMK\\PersonalFinances\\PersonalFinances.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-PersonalFinanceManager\\PersonalFinances.csproj",
+        "projectUniqueName": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\FullstackHAMK\\PersonalFinances\\PersonalFinances.csproj",
         "projectName": "PersonalFinances",
-        "projectPath": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-PersonalFinanceManager\\PersonalFinances.csproj",
+        "projectPath": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\FullstackHAMK\\PersonalFinances\\PersonalFinances.csproj",
         "packagesPath": "C:\\Users\\eemel\\.nuget\\packages\\",
-        "outputPath": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-PersonalFinanceManager\\obj\\",
+        "outputPath": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\FullstackHAMK\\PersonalFinances\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\eemel\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -74,7 +74,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

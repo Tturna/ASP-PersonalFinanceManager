@@ -1,6 +1,32 @@
-﻿@{
+﻿@model List<TransactionModel>
+
+@{
     ViewBag.Title = "Finances";
     Layout = "_Layout";
 }
 
 <h2>Finances</h2>
+
+<a asp-action="AddTransaction" class="btn btn-primary">Add Income or Expense</a>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Is Income</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model)
+        {
+            <tr>
+                <td>@transaction.Name</td>
+                <td>@transaction.Category</td>
+                <td>@(transaction.AmountEuro / 100) €</td>
+                <td>@transaction.IsIncome</td>
+            </tr>
+        }
+    </tbody>
+</table>
