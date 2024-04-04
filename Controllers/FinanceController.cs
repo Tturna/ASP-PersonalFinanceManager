@@ -68,6 +68,7 @@ public class FinanceController(AppDbContext dbContext) : Controller
         {
             UserModel = userWithTransactions,
             UserModelId = userWithTransactions.Id,
+            Date = DateOnly.FromDateTime(DateTime.Now),
             IsIncome = transactionData.IsIncome,
             Name = transactionData.Name,
             AmountEuro = transactionData.AmountEuro,

@@ -3,52 +3,46 @@
 @{
     ViewBag.Title = "Finances";
     Layout = "_Layout";
+    
+    var sortedTransactionGroups = Model.AllTransactions
+        .OrderByDescending(t => t.Date)
+        .GroupBy(t => t.Date.ToString("MMMM yyyy"));
 }
 
 <h2>Finances</h2>
 
 <a asp-action="AddTransaction" class="btn btn-primary my-3">Add Income or Expense</a>
 
-<h3>Income</h3>
+<div class="timeline">
 
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Amount</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var transaction in Model.IncomeTransactions)
-    {
-        <tr>
-            <td>@transaction.Name</td>
-            <td>@transaction.Category</td>
-            <td>@transaction.AmountEuro.ToString("F2") €</td>
-        </tr>
-    }
-    </tbody>
-</table>
-
-<h3>Expenses</h3>
-
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Amount</th>
-    </tr>
-    </thead>
-    <tbody>
-        @foreach (var transaction in Model.ExpenseTransactions)
+    <div class="timeline-content">
+        @foreach (var group in sortedTransactionGroups)
         {
-            <tr>
-                <td>@transaction.Name</td>
-                <td>@transaction.Category</td>
-                <td>@transaction.AmountEuro.ToString("F2") €</td>
-            </tr>
+            <div class="w-100 mb-3 position-relative">
+                <span class="w-100 border-bottom position-absolute top-50"></span>
+                <span class="d-inline-block position-relative p-2 bg-white" style="left: 3vw">@group.Key</span>
+            </div>
+    
+            <table class="table table-light">
+                <tbody>
+                @{
+                    foreach (var transaction in group)
+                    {
+                        var prefix = transaction.IsIncome ? "+" : "-";
+                        var prefixClass = transaction.IsIncome ? "text-success" : "text-danger";
+                        
+                        <tr>
+                            <td>@transaction.Date.ToString("dd.MM")</td>
+                            <td class="@prefixClass">@prefix</td>
+                            <td>@transaction.Name</td>
+                            <td>@transaction.Category</td>
+                            <td><span class="@prefixClass">@prefix</span></td>
+                            <td>@transaction.AmountEuro.ToString("F2") €</td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
         }
-    </tbody>
-</table>
+    </div>
+</div>

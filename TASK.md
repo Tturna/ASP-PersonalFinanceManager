@@ -7,7 +7,7 @@ The aim is to utilize each and every phase we've gone through, meaning that you 
     ✔️Authorization
     ✔️Authentication
     ✔️Model passing to views
-    Viewmodels
+    ✔️Viewmodels
     ✔️Form validation (Model attribute based)
     ✔️Anti-forgery token validation
     Partial views
