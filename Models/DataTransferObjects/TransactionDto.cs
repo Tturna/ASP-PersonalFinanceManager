@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PersonalFinances.Models.DataTransferObjects;
 
-public enum Reoccurrance
+public enum Reoccurrence
 {
     None,
     Daily,
@@ -16,30 +16,30 @@ public enum Reoccurrance
 public class TransactionDto
 {
     [Required]
-    public required bool IsIncome { get; set; }
+    public bool IsIncome { get; init; }
     
     [Required, DataType(DataType.Currency), Range(0, double.MaxValue)]
-    public required decimal AmountEuro { get; set; }
+    public decimal AmountEuro { get; init; }
 
     [Required, MinLength(3), MaxLength(20)]
-    public required string Name { get; set; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
     
     [StringLength(20)]
-    public string? Category { get; set; }
+    public string? Category { get; init; }
     
     [Required]
     [DataType(DataType.Date)]
-    public required DateOnly Date { get; set; }
-    public Reoccurrance? Reoccurrence { get; set; }
+    public DateOnly Date { get; init; }
+    public Reoccurrence? Reoccurrence { get; init; }
 
     [BindNever]
-    public static List<SelectListItem> ReoccurrenceOptions { get; set; }
+    public static List<SelectListItem> ReoccurrenceOptions { get; }
     [BindNever]
-    public static List<SelectListItem> IsIncomeOptions { get; set; }
+    public static List<SelectListItem> IsIncomeOptions { get; }
 
     static TransactionDto()
     {
-        ReoccurrenceOptions = Enum.GetValues<Reoccurrance>()
+        ReoccurrenceOptions = Enum.GetValues<Reoccurrence>()
             .Select(r => new SelectListItem
             {
                 Value = r.ToString(),

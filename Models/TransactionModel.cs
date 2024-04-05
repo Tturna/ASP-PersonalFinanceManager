@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using PersonalFinances.Models.DataTransferObjects;
+﻿using PersonalFinances.Models.DataTransferObjects;
 
 namespace PersonalFinances.Models;
 
@@ -12,4 +10,19 @@ public class TransactionModel : TransactionDto
     public required UserModel UserModel { get; set; }
     // foreign key
     public required int UserModelId { get; set; }
+
+    public TransactionModel Clone(DateOnly newDate)
+    {
+        return new TransactionModel()
+        {
+            UserModel = UserModel,
+            UserModelId = UserModelId,
+            IsIncome = IsIncome,
+            AmountEuro = AmountEuro,
+            Name = Name,
+            Date = newDate,
+            Category = Category,
+            Reoccurrence = Reoccurrence
+        };
+    }
 }

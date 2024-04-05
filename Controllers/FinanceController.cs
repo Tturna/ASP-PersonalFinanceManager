@@ -14,36 +14,16 @@ public class FinanceController(AppDbContext dbContext) : Controller
 {
     public IActionResult Index()
     {
-        var userName = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userName = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
         // user can't be null because of the [Authorize] attribute
         var userTransactions = dbContext.Transactions
             .Include(t => t.UserModel)
             .Where(t => t.UserModel.Username == userName)
             .ToList();
-        
-        var incomeTransactions = userTransactions.Where(t => t.IsIncome).ToList();
-        var expenseTransactions = userTransactions.Where(t => !t.IsIncome).ToList();
 
-        var sortedTransactionGroups = userTransactions
-            .OrderByDescending(t => t.Date)
-            .GroupBy(t => t.Date.ToString("MMMM yyyy"))
-            .Select(g => new FinanceViewModel.TransactionGroup
-            {
-                MonthYear = g.Key,
-                Transactions = g.ToList(),
-                TotalIncome = g.Where(t => t.IsIncome).Sum(t => t.AmountEuro),
-                TotalExpenses = g.Where(t => !t.IsIncome).Sum(t => t.AmountEuro),
-                Total = g.Sum(t => t.AmountEuro)
-            });
 
-        var financeViewModel = new FinanceViewModel()
-        {
-            IncomeTransactions = incomeTransactions,
-            ExpenseTransactions = expenseTransactions,
-            AllTransactions = userTransactions,
-            SortedTransactionGroups = sortedTransactionGroups
-        };
+        var financeViewModel = new FinanceViewModel(userTransactions);
 
         return View(financeViewModel);
     }
@@ -62,7 +42,7 @@ public class FinanceController(AppDbContext dbContext) : Controller
             return View(transactionData);
         }
 
-        var userName = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userName = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
         // user can't be null because of the [Authorize] attribute
         var userWithTransactions = dbContext.Users
@@ -84,12 +64,12 @@ public class FinanceController(AppDbContext dbContext) : Controller
         {
             UserModel = userWithTransactions,
             UserModelId = userWithTransactions.Id,
-            Date = date,
             IsIncome = transactionData.IsIncome,
-            Name = transactionData.Name,
             AmountEuro = transactionData.AmountEuro,
+            Name = transactionData.Name,
+            Date = date,
             Category = transactionData.Category,
-            Reoccurrence = transactionData.Reoccurrence,
+            Reoccurrence = transactionData.Reoccurrence
         };
 
         dbContext.Transactions.Add(newTransaction);
