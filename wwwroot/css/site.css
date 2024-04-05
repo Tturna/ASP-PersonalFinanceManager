@@ -33,3 +33,14 @@ body {
   position: relative;
   padding: 1rem;
 }
+
+.finance-totals {
+  width: 25%;
+  padding-bottom: 1rem;
+  margin: auto 0 auto auto;
+  text-align: end;
+}
+
+.finance-totals div {
+  margin: auto 0 auto auto;
+}

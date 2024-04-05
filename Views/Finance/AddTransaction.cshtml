@@ -10,9 +10,17 @@
 
 <form asp-action="AddTransaction">
     <div class="my-3">
-        <label asp-for="IsIncome" class="form-check-label">Transaction type</label>
-        <select asp-for="IsIncome" asp-items="TransactionDto.IsIncomeOptions"></select>
-        @* <span asp-validation-for="IsIncome" class="text-danger"></span> *@
+        <div class="d-inline-block">
+            <label asp-for="IsIncome" class="form-check-label">Transaction type</label>
+            <select asp-for="IsIncome" asp-items="TransactionDto.IsIncomeOptions"></select>
+        </div>
+        <div class="d-inline-block mx-3">
+            <label asp-for="Reoccurrence"></label>
+            <select asp-for="Reoccurrence" asp-items="TransactionDto.ReoccurrenceOptions"></select>
+        </div>
+        <div class="d-inline-block">
+            <input asp-for="Date" class="form-control"/>
+        </div>
     </div>
     <div class="form-floating mb-3">
         <input asp-for="Name" class="form-control"/>
@@ -28,11 +36,6 @@
         <input asp-for="AmountEuro" class="form-control"/>
         <label asp-for="AmountEuro"></label>
         <span asp-validation-for="AmountEuro" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Reoccurrence"></label>
-        <select asp-for="Reoccurrence" asp-items="TransactionDto.ReoccurrenceOptions"></select>
-        <span asp-validation-for="Reoccurrence" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Add Transaction</button>
 </form>

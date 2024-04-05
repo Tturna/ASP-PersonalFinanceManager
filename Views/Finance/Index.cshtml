@@ -3,10 +3,6 @@
 @{
     ViewBag.Title = "Finances";
     Layout = "_Layout";
-    
-    var sortedTransactionGroups = Model.AllTransactions
-        .OrderByDescending(t => t.Date)
-        .GroupBy(t => t.Date.ToString("MMMM yyyy"));
 }
 
 <h2>Finances</h2>
@@ -16,17 +12,35 @@
 <div class="timeline">
 
     <div class="timeline-content">
-        @foreach (var group in sortedTransactionGroups)
+        @foreach (var group in Model.SortedTransactionGroups)
         {
             <div class="w-100 mb-3 position-relative">
                 <span class="w-100 border-bottom position-absolute top-50"></span>
-                <span class="d-inline-block position-relative p-2 bg-white" style="left: 3vw">@group.Key</span>
+                <span class="d-inline-block position-relative p-2 bg-white" style="left: 3vw">@group.MonthYear</span>
+            </div>
+            
+            <div class="finance-totals">
+                <div class="w-25 border-bottom">
+                    <span>Total</span>
+                </div>
+                <div class="w-50">
+                    <div class="w-100">
+                        <span class="text-success">+</span> @group.TotalIncome.ToString("F2") €
+                    </div>
+                    <div class="w-100">
+                        <span class="text-danger">-</span> @group.TotalExpenses.ToString("F2") €
+                    </div>
+                    <div class="w-50 border-bottom"></div>
+                    <div class="w-100">
+                        <span class="text-primary">=</span> @group.Total.ToString("F2") €
+                    </div>
+                </div>
             </div>
     
             <table class="table table-light">
                 <tbody>
                 @{
-                    foreach (var transaction in group)
+                    foreach (var transaction in group.Transactions)
                     {
                         var prefix = transaction.IsIncome ? "+" : "-";
                         var prefixClass = transaction.IsIncome ? "text-success" : "text-danger";

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PersonalFinances.Models.DataTransferObjects;
@@ -25,9 +26,15 @@ public class TransactionDto
     
     [StringLength(20)]
     public string? Category { get; set; }
+    
+    [Required]
+    [DataType(DataType.Date)]
+    public required DateOnly Date { get; set; }
     public Reoccurrance? Reoccurrence { get; set; }
 
+    [BindNever]
     public static List<SelectListItem> ReoccurrenceOptions { get; set; }
+    [BindNever]
     public static List<SelectListItem> IsIncomeOptions { get; set; }
 
     static TransactionDto()

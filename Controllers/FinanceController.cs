@@ -25,10 +25,24 @@ public class FinanceController(AppDbContext dbContext) : Controller
         var incomeTransactions = userTransactions.Where(t => t.IsIncome).ToList();
         var expenseTransactions = userTransactions.Where(t => !t.IsIncome).ToList();
 
+        var sortedTransactionGroups = userTransactions
+            .OrderByDescending(t => t.Date)
+            .GroupBy(t => t.Date.ToString("MMMM yyyy"))
+            .Select(g => new FinanceViewModel.TransactionGroup
+            {
+                MonthYear = g.Key,
+                Transactions = g.ToList(),
+                TotalIncome = g.Where(t => t.IsIncome).Sum(t => t.AmountEuro),
+                TotalExpenses = g.Where(t => !t.IsIncome).Sum(t => t.AmountEuro),
+                Total = g.Sum(t => t.AmountEuro)
+            });
+
         var financeViewModel = new FinanceViewModel()
         {
             IncomeTransactions = incomeTransactions,
-            ExpenseTransactions = expenseTransactions
+            ExpenseTransactions = expenseTransactions,
+            AllTransactions = userTransactions,
+            SortedTransactionGroups = sortedTransactionGroups
         };
 
         return View(financeViewModel);
@@ -64,11 +78,13 @@ public class FinanceController(AppDbContext dbContext) : Controller
             return View(transactionData);
         }
 
+        var date = transactionData.Date == default ? DateOnly.FromDateTime(DateTime.Now) : transactionData.Date;
+
         var newTransaction = new TransactionModel
         {
             UserModel = userWithTransactions,
             UserModelId = userWithTransactions.Id,
-            Date = DateOnly.FromDateTime(DateTime.Now),
+            Date = date,
             IsIncome = transactionData.IsIncome,
             Name = transactionData.Name,
             AmountEuro = transactionData.AmountEuro,
