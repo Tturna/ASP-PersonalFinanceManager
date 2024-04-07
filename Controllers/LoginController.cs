@@ -48,7 +48,7 @@ public class LoginController(AppDbContext dbContext, HashingService hashingServi
 
         await HttpContext.SignInAsync(claimsPrincipal, authProperties);
         
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Finance");
     }
 
     public async Task<IActionResult> Logout()
