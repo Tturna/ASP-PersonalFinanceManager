@@ -33,6 +33,7 @@ public class FinanceViewModel
         var daysLeftInMonth = daysInMonth - today.Day;
 
         // group transactions by year and month
+        // TODO: Fix bug where future transactions of this month are shown treated as past transactions
         SortedTransactionGroups = confirmedTransactions
             .OrderByDescending(t => t.Date)
             .GroupBy(t => t.Date.ToString("MMMM yyyy"))
@@ -92,6 +93,9 @@ public class FinanceViewModel
         {
             MonthYear = today.AddMonths(1).ToString("MMMM yyyy")
         };
+        
+        var nextMonth = today.AddMonths(1);
+        var daysInNextMonth = DateTime.DaysInMonth(nextMonth.Year, nextMonth.Month);
 
         foreach (var transaction in confirmedTransactions)
         {
@@ -101,6 +105,12 @@ public class FinanceViewModel
                 for (var i = 0; i < daysLeftInMonth; i++)
                 {
                     ExpectedTransactionsThisMonth.Add(transaction.Clone(today.AddDays(i + 1)));
+                }
+
+                for (var i = 0; i < daysInNextMonth; i++)
+                {
+                    var newDate = new DateOnly(today.Year, today.Month, 1).AddMonths(1).AddDays(i);
+                    ExpectedTransactionGroupNextMonth.Transactions.Add(transaction.Clone(newDate));
                 }
             }
             else if (transaction.Reoccurrence == Reoccurrence.Weekly)
@@ -112,9 +122,21 @@ public class FinanceViewModel
                         ExpectedTransactionsThisMonth.Add(transaction.Clone(today.AddDays(i)));
                     }
                 }
+
+                for (var i = 0; i < daysInNextMonth; i++)
+                {
+                    var newDate = new DateOnly(today.Year, today.Month, 1).AddMonths(1).AddDays(i);
+                    if ((newDate.DayNumber - trDate.DayNumber) % 7 != 0) continue;
+                    ExpectedTransactionGroupNextMonth.Transactions.Add(transaction.Clone(newDate));
+                    i += 6; // idk if this actually speeds up anything but I like to think it does
+                }
             }
             else if (transaction.Reoccurrence == Reoccurrence.Monthly)
             {
+                var expectedTrDay = trDate.Day > daysInNextMonth ? daysInNextMonth : trDate.Day;
+                var expectedTrDate = new DateOnly(today.Year, today.Month, expectedTrDay).AddMonths(1);
+                ExpectedTransactionGroupNextMonth.Transactions.Add(transaction.Clone(expectedTrDate));
+                
                 if (trDate.Day <= today.Day) continue;
                 
                 var newTrDay = trDate.Day > daysInMonth ? daysInMonth : trDate.Day;
@@ -124,11 +146,16 @@ public class FinanceViewModel
             }
             else if (transaction.Reoccurrence == Reoccurrence.Annually)
             {
-                if (transaction.Date.Month != today.Month || transaction.Date.Day <= today.Day) continue;
-                
-                var newTrDate = new DateOnly(today.Year, trDate.Month, trDate.Day);
-                    
-                ExpectedTransactionsThisMonth.Add(transaction.Clone(newTrDate));
+                if (trDate.Month == today.Month)
+                {
+                    var newTrDate = new DateOnly(today.Year, trDate.Month, trDate.Day);
+                    ExpectedTransactionsThisMonth.Add(transaction.Clone(newTrDate));
+                }
+                else if (trDate.Month == nextMonth.Month)
+                {
+                    var newTrDate = new DateOnly(today.Year, trDate.Month, trDate.Day).AddMonths(1);
+                    ExpectedTransactionGroupNextMonth.Transactions.Add(transaction.Clone(newTrDate));
+                }
             }
         }
         

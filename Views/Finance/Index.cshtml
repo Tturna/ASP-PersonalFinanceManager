@@ -10,8 +10,49 @@
 <a asp-action="AddTransaction" class="btn btn-primary my-3">Add Income or Expense</a>
 
 <div class="timeline">
-
     <div class="timeline-content">
+        <div class="w-100 mb-3 position-relative">
+            <span class="w-100 border-bottom position-absolute top-50"></span>
+            <span class="d-inline-block position-relative p-2 bg-white" style="left: 3vw">@Model.ExpectedTransactionGroupNextMonth.MonthYear</span>
+        </div>
+        
+        <div class="finance-totals">
+            <div class="w-25 border-bottom">
+                <span>Total</span>
+            </div>
+            <div class="w-50">
+                <div class="w-100">
+                    <span class="text-success">+</span> @Model.ExpectedTransactionGroupNextMonth.TotalIncome.ToString("F2") €
+                </div>
+                <div class="w-100">
+                    <span class="text-danger">-</span> @Model.ExpectedTransactionGroupNextMonth.TotalExpenses.ToString("F2") €
+                </div>
+                <div class="w-50 border-bottom"></div>
+                <div class="w-100">
+                    <span class="text-primary">=</span> @Model.ExpectedTransactionGroupNextMonth.Total.ToString("F2") €
+                </div>
+            </div>
+        </div>
+        
+        <table class="table table-light">
+            <tbody>
+                @foreach (var transaction in Model.ExpectedTransactionGroupNextMonth.Transactions)
+                {
+                    var prefix = transaction.IsIncome ? "+" : "-";
+                    var prefixClass = transaction.IsIncome ? "text-success" : "text-danger";
+
+                    <tr>
+                        <td class="text-muted">@transaction.Date.ToString("dd.MM")</td>
+                        <td class="@prefixClass">@prefix</td>
+                        <td class="text-muted">@transaction.Name</td>
+                        <td class="text-muted">@transaction.Category</td>
+                        <td class="@prefixClass">@prefix</td>
+                        <td class="text-muted">@transaction.AmountEuro.ToString("F2") €</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        
         @foreach (var group in Model.SortedTransactionGroups)
         {
             <div class="w-100 mb-3 position-relative">
