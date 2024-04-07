@@ -30,6 +30,7 @@ public class TransactionDto
     [Required]
     [DataType(DataType.Date)]
     public DateOnly Date { get; init; }
+    public DateOnly? CancelDate { get; init; }
     public Reoccurrence? Reoccurrence { get; init; }
 
     [BindNever]

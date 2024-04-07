@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hstpOTK61JjUrBA0nYKxt2g2Zo6ifrDZQdSWZPWY69FZzuYJ+BI7H+3qURk8v8x6+MJgvKGP2QDDbTM7UWhOtg==",
+  "dgSpecHash": "J+VBtTspPjKORbRMIK/63yWSGXqF+nj4fVhwOlK0AjScWHqSwnKBKza9rBVpRQd7j9+EDy71dAoSoEksZFy13w==",
   "success": true,
-  "projectFilePath": "D:\\Folders\\Stuffs\\Github Repositories\\ASP-PersonalFinanceManager\\PersonalFinances.csproj",
+  "projectFilePath": "C:\\Users\\eemel\\Documents\\Things\\C# Projects\\FullstackHAMK\\PersonalFinances\\PersonalFinances.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\eemel\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\eemel\\.nuget\\packages\\konscious.security.cryptography.argon2\\1.3.0\\konscious.security.cryptography.argon2.1.3.0.nupkg.sha512",

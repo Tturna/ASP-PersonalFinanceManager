@@ -33,13 +33,13 @@ public class FinanceViewModel
         var daysLeftInMonth = daysInMonth - today.Day;
 
         // group transactions by year and month
-        // TODO: Fix bug where future transactions of this month are shown treated as past transactions
         SortedTransactionGroups = confirmedTransactions
+            .Where(t => t.Date <= today)
             .OrderByDescending(t => t.Date)
             .GroupBy(t => t.Date.ToString("MMMM yyyy"))
             .Select(g => new TransactionGroup
             {
-                MonthYear = g.Key,
+            MonthYear = g.Key,
                 IsCurrentMonth = g.Key == currentMonthYear,
                 Transactions = g.ToList(),
                 TotalIncome = g.Where(t => t.IsIncome).Sum(t => t.AmountEuro),
@@ -49,6 +49,7 @@ public class FinanceViewModel
             .ToList();
         
         // fill in the gaps between the first transaction and today
+        // TODO: Add old recurring transactions to autofilled months
         var oldestGroup = SortedTransactionGroups.LastOrDefault();
         if (oldestGroup != null)
         {

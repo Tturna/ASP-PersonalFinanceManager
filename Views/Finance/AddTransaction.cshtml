@@ -19,7 +19,12 @@
             <select asp-for="Reoccurrence" asp-items="TransactionDto.ReoccurrenceOptions"></select>
         </div>
         <div class="d-inline-block">
+            <label asp-for="Date">Start</label>
             <input asp-for="Date" class="form-control"/>
+        </div>
+        <div class="d-inline-block">
+            <label asp-for="CancelDate">End</label>
+            <input asp-for="CancelDate" class="form-control"/>
         </div>
     </div>
     <div class="form-floating mb-3">
