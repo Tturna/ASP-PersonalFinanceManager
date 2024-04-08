@@ -1,0 +1,19 @@
+﻿@model PersonalFinances.Models.ViewModels.FinanceViewModel.TransactionGroup
+
+<div class="finance-totals">
+    <div class="w-25 border-bottom">
+        <span>Total</span>
+    </div>
+    <div class="w-50">
+        <div class="w-100">
+            <span class="text-success">+</span> @Model.TotalIncome.ToString("F2") €
+        </div>
+        <div class="w-100">
+            <span class="text-danger">-</span> @Model.TotalExpenses.ToString("F2") €
+        </div>
+        <div class="w-50 border-bottom"></div>
+        <div class="w-100">
+            <span class="text-primary">=</span> @Model.Total.ToString("F2") €
+        </div>
+    </div>
+</div>

@@ -3,6 +3,11 @@
 @{
     ViewBag.Title = "Finances";
     Layout = "_Layout";
+    
+    var muteTextData = new ViewDataDictionary(ViewData)
+    {
+        ["tdClass"] = "text-muted"
+    };
 }
 
 <h2>Finances</h2>
@@ -11,117 +16,21 @@
 
 <div class="timeline">
     <div class="timeline-content">
-        <div class="w-100 mb-3 position-relative">
-            <span class="w-100 border-bottom position-absolute top-50"></span>
-            <span class="d-inline-block position-relative p-2 bg-white" style="left: 3vw">@Model.ExpectedTransactionGroupNextMonth.MonthYear</span>
-        </div>
-        
-        <div class="finance-totals">
-            <div class="w-25 border-bottom">
-                <span>Total</span>
-            </div>
-            <div class="w-50">
-                <div class="w-100">
-                    <span class="text-success">+</span> @Model.ExpectedTransactionGroupNextMonth.TotalIncome.ToString("F2") €
-                </div>
-                <div class="w-100">
-                    <span class="text-danger">-</span> @Model.ExpectedTransactionGroupNextMonth.TotalExpenses.ToString("F2") €
-                </div>
-                <div class="w-50 border-bottom"></div>
-                <div class="w-100">
-                    <span class="text-primary">=</span> @Model.ExpectedTransactionGroupNextMonth.Total.ToString("F2") €
-                </div>
-            </div>
-        </div>
-        
-        <table class="table table-light">
-            <tbody>
-                @foreach (var transaction in Model.ExpectedTransactionGroupNextMonth.Transactions)
-                {
-                    var prefix = transaction.IsIncome ? "+" : "-";
-                    var prefixClass = transaction.IsIncome ? "text-success" : "text-danger";
-
-                    <tr>
-                        <td class="text-muted">@transaction.Date.ToString("dd.MM")</td>
-                        <td class="@prefixClass">@prefix</td>
-                        <td class="text-muted">@transaction.Name</td>
-                        <td class="text-muted">@transaction.Category</td>
-                        <td class="@prefixClass">@prefix</td>
-                        <td class="text-muted">@transaction.AmountEuro.ToString("F2") €</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <partial name="_TimelineHeader" model="Model.ExpectedTransactionGroupNextMonth.MonthYear" />
+        <partial name="_Totals" model="Model.ExpectedTransactionGroupNextMonth" />
+        <partial name="_TransactionTable" model="Model.ExpectedTransactionGroupNextMonth.Transactions" view-data="muteTextData" />
         
         @foreach (var group in Model.SortedTransactionGroups)
         {
-            <div class="w-100 mb-3 position-relative">
-                <span class="w-100 border-bottom position-absolute top-50"></span>
-                <span class="d-inline-block position-relative p-2 bg-white" style="left: 3vw">@group.MonthYear</span>
-            </div>
-            
+            <partial name="_TimelineHeader" model="group.MonthYear"/>
+
             @if (group.IsCurrentMonth && Model.ExpectedTransactionsThisMonth.Any())
             {
-                <table class="table table-light">
-                    <tbody>
-                    @{
-                        foreach (var transaction in Model.ExpectedTransactionsThisMonth)
-                        {
-                            var prefix = transaction.IsIncome ? "+" : "-";
-                            var prefixClass = transaction.IsIncome ? "text-success" : "text-danger";
-
-                            <tr>
-                                <td class="text-muted">@transaction.Date.ToString("dd.MM")</td>
-                                <td class="@prefixClass">@prefix</td>
-                                <td class="text-muted">@transaction.Name</td>
-                                <td class="text-muted">@transaction.Category</td>
-                                <td class="@prefixClass">@prefix</td>
-                                <td class="text-muted">@transaction.AmountEuro.ToString("F2") €</td>
-                            </tr>
-                        }
-                    }
-                    </tbody>
-                </table>
+                <partial name="_TransactionTable" model="Model.ExpectedTransactionsThisMonth" view-data="muteTextData" />
             }
 
-            <div class="finance-totals">
-                <div class="w-25 border-bottom">
-                    <span>Total</span>
-                </div>
-                <div class="w-50">
-                    <div class="w-100">
-                        <span class="text-success">+</span> @group.TotalIncome.ToString("F2") €
-                    </div>
-                    <div class="w-100">
-                        <span class="text-danger">-</span> @group.TotalExpenses.ToString("F2") €
-                    </div>
-                    <div class="w-50 border-bottom"></div>
-                    <div class="w-100">
-                        <span class="text-primary">=</span> @group.Total.ToString("F2") €
-                    </div>
-                </div>
-            </div>
-
-            <table class="table table-light">
-                <tbody>
-                @{
-                    foreach (var transaction in group.Transactions)
-                    {
-                        var prefix = transaction.IsIncome ? "+" : "-";
-                        var prefixClass = transaction.IsIncome ? "text-success" : "text-danger";
-
-                        <tr>
-                            <td>@transaction.Date.ToString("dd.MM")</td>
-                            <td class="@prefixClass">@prefix</td>
-                            <td>@transaction.Name</td>
-                            <td>@transaction.Category</td>
-                            <td class="@prefixClass">@prefix</td>
-                            <td>@transaction.AmountEuro.ToString("F2") €</td>
-                        </tr>
-                    }
-                }
-                </tbody>
-            </table>
+            <partial name="_Totals" model="group" />
+            <partial name="_TransactionTable" model="group.Transactions" />
         }
     </div>
 </div>

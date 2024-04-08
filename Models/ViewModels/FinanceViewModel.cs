@@ -14,19 +14,12 @@ public class FinanceViewModel
         public decimal Total { get; init; }
     }
     
-    // public List<TransactionModel> IncomeTransactions { get; init; }
-    // public List<TransactionModel> ExpenseTransactions { get; init; }
-    // List<TransactionModel> ConfirmedTransactions { get; init; }
     public List<TransactionGroup> SortedTransactionGroups { get; init; }
     public List<TransactionModel> ExpectedTransactionsThisMonth { get; init; }
     public TransactionGroup ExpectedTransactionGroupNextMonth { get; init; }
 
     public FinanceViewModel(List<TransactionModel> confirmedTransactions)
     {
-        // ConfirmedTransactions = confirmedTransactions;
-        // IncomeTransactions = ConfirmedTransactions.Where(t => t.IsIncome).ToList();
-        // ExpenseTransactions = ConfirmedTransactions.Where(t => !t.IsIncome).ToList();
-        
         var today = DateOnly.FromDateTime(DateTime.Now);
         var currentMonthYear = today.ToString("MMMM yyyy");
         var daysInMonth = DateTime.DaysInMonth(today.Year, today.Month);
@@ -39,7 +32,7 @@ public class FinanceViewModel
             .GroupBy(t => t.Date.ToString("MMMM yyyy"))
             .Select(g => new TransactionGroup
             {
-            MonthYear = g.Key,
+                MonthYear = g.Key,
                 IsCurrentMonth = g.Key == currentMonthYear,
                 Transactions = g.ToList(),
                 TotalIncome = g.Where(t => t.IsIncome).Sum(t => t.AmountEuro),
@@ -101,6 +94,7 @@ public class FinanceViewModel
             .Select(g => g.First())
             .ToList();
 
+        // TODO: Refactor using ReoccurrenceService
         foreach (var transaction in uniqueTransactions)
         {
             var trDate = transaction.Date;

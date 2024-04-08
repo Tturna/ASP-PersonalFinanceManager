@@ -1,0 +1,24 @@
+﻿@model List<TransactionModel>
+
+@{
+    var tdClass = ViewData["tdClass"] as string;
+}
+
+<table class="table table-light">
+    <tbody>
+    @foreach (var transaction in Model)
+    {
+        var prefix = transaction.IsIncome ? "+" : "-";
+        var prefixClass = transaction.IsIncome ? "text-success" : "text-danger";
+
+        <tr>
+            <td class="@tdClass">@transaction.Date.ToString("dd.MM")</td>
+            <td class="@prefixClass">@prefix</td>
+            <td class="@tdClass">@transaction.Name</td>
+            <td class="@tdClass">@transaction.Category</td>
+            <td class="@prefixClass">@prefix</td>
+            <td class="@tdClass">@transaction.AmountEuro.ToString("F2") €</td>
+        </tr>
+    }
+    </tbody>
+</table>
