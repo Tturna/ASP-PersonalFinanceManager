@@ -1,4 +1,4 @@
-﻿using PersonalFinances.Models.DataTransferObjects;
+﻿using PersonalFinances.Models.Enums;
 
 namespace PersonalFinances.Models.ViewModels;
 
@@ -49,7 +49,6 @@ public class FinanceViewModel
             .ToList();
         
         // fill in the gaps between the first transaction and today
-        // TODO: Add old recurring transactions to autofilled months
         var oldestGroup = SortedTransactionGroups.LastOrDefault();
         if (oldestGroup != null)
         {
@@ -97,8 +96,12 @@ public class FinanceViewModel
         
         var nextMonth = today.AddMonths(1);
         var daysInNextMonth = DateTime.DaysInMonth(nextMonth.Year, nextMonth.Month);
+        var uniqueTransactions = confirmedTransactions
+            .GroupBy(t => t.Name)
+            .Select(g => g.First())
+            .ToList();
 
-        foreach (var transaction in confirmedTransactions)
+        foreach (var transaction in uniqueTransactions)
         {
             var trDate = transaction.Date;
             if (transaction.Reoccurrence == Reoccurrence.Daily)

@@ -1,17 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PersonalFinances.Models.Enums;
 
 namespace PersonalFinances.Models.DataTransferObjects;
-
-public enum Reoccurrence
-{
-    None,
-    Daily,
-    Weekly,
-    Monthly,
-    Annually
-}
 
 public class TransactionDto
 {

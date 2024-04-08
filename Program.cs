@@ -27,6 +27,7 @@ builder.Services.AddAuthentication().AddCookie(cookieAuthOptions =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<HashingService>();
+builder.Services.AddScoped<ReoccurrenceService>();
 
 var app = builder.Build();
 
