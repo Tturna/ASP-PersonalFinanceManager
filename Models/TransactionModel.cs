@@ -18,7 +18,7 @@ public class TransactionModel : TransactionDto
     {
         return new TransactionModel()
         {
-            Id = Id,
+            // Id = Id,
             UserModel = UserModel,
             UserModelId = UserModelId,
             IsIncome = IsIncome,

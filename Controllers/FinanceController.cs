@@ -152,6 +152,7 @@ public class FinanceController(AppDbContext dbContext, ReoccurrenceService reocc
     
     [HttpPost]
     [ValidateAntiForgeryToken]
+    // TODO: Authorize only the user who created the transaction
     public async Task<IActionResult> EditTransaction([FromForm] TransactionModel transactionData)
     {
         if (!ModelState.IsValid)
@@ -159,11 +160,20 @@ public class FinanceController(AppDbContext dbContext, ReoccurrenceService reocc
             return View("EditTransaction", transactionData);
         }
         
-        var transaction = await dbContext.Transactions.FirstOrDefaultAsync(t => t.Id == transactionData.Id);
+        var transaction = await dbContext.Transactions
+            .Include(t => t.UserModel)
+            .FirstOrDefaultAsync(t => t.Id == transactionData.Id);
         
         if (transaction is null)
         {
             return NotFound();
+        }
+        
+        var userName = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+        if (transaction.UserModel.Username != userName)
+        {
+            return Forbid();
         }
 
         var canUpdate = await TryUpdateModelAsync(
@@ -192,6 +202,44 @@ public class FinanceController(AppDbContext dbContext, ReoccurrenceService reocc
         {
             ModelState.AddModelError(string.Empty, "Something went wrong updating the transaction. Please try again.");
             return View("EditTransaction", transactionData);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteTransaction([FromBody]int? id)
+    {
+        if (id == null)
+        {
+            return BadRequest();
+        }
+        
+        var transaction = await dbContext.Transactions
+            .Include(t => t.UserModel)
+            .FirstOrDefaultAsync(t => t.Id == id);
+        
+        if (transaction is null)
+        {
+            return NotFound();
+        }
+
+        var userName = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+        if (transaction.UserModel.Username != userName)
+        {
+            return Forbid();
+        }
+        
+        dbContext.Transactions.Remove(transaction);
+
+        try
+        {
+            await dbContext.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+        catch
+        {
+            ModelState.AddModelError(string.Empty, "Something went wrong deleting the transaction. Please try again.");
+            return View("Index");
         }
     }
 }

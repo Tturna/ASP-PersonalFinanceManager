@@ -10,7 +10,7 @@ public class TransactionDto
     [Required]
     public bool IsIncome { get; set; }
     
-    [Required, DataType(DataType.Currency), Range(0, double.MaxValue)]
+    [Required, DataType(DataType.Currency), Range(0, 1000_000_000)]
     public decimal AmountEuro { get; set; }
 
     [Required, MinLength(3), MaxLength(20)]

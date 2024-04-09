@@ -18,6 +18,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\eemel\Documents\Things\C# Projects\FullstackHAMK\PersonalFinances
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/eemel/Documents/Things/C\# Projects/FullstackHAMK/PersonalFinances/Views/Analytics/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl0aWNzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/eemel/Documents/Things/C\# Projects/FullstackHAMK/PersonalFinances/Views/Finance/AddTransaction.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYW5jZVxBZGRUcmFuc2FjdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
