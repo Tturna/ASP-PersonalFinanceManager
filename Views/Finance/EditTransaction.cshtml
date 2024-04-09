@@ -1,0 +1,48 @@
+﻿@using PersonalFinances.Models.DataTransferObjects
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model TransactionModel
+
+@{
+    ViewBag.Title = "Edit Transaction";
+    Layout = "_Layout";
+}
+
+<h2>Edit Transaction</h2>
+
+<form asp-controller="Finance" asp-action="EditTransaction">
+    <input type="hidden" asp-for="Id" />
+    <div class="my-3">
+        <div class="d-inline-block">
+            <label asp-for="IsIncome" class="form-check-label">Transaction type</label>
+            <select asp-for="IsIncome" asp-items="TransactionDto.IsIncomeOptions"></select>
+        </div>
+        <div class="d-inline-block mx-3">
+            <label asp-for="Reoccurrence"></label>
+            <select asp-for="Reoccurrence" asp-items="TransactionDto.ReoccurrenceOptions"></select>
+        </div>
+        <div class="d-inline-block">
+            <label asp-for="Date">Start</label>
+            <input asp-for="Date" class="form-control"/>
+        </div>
+        <div class="d-inline-block">
+            <label asp-for="CancelDate">End</label>
+            <input asp-for="CancelDate" class="form-control"/>
+        </div>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="Name" class="form-control"/>
+        <label asp-for="Name"></label>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="Category" class="form-control"/>
+        <label asp-for="Category"></label>
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="AmountEuro" class="form-control"/>
+        <label asp-for="AmountEuro"></label>
+        <span asp-validation-for="AmountEuro" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

@@ -13,7 +13,7 @@ namespace PersonalFinances.Controllers;
 [Authorize]
 public class FinanceController(AppDbContext dbContext, ReoccurrenceService reoccurrenceService) : Controller
 {
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         var userName = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -57,8 +57,16 @@ public class FinanceController(AppDbContext dbContext, ReoccurrenceService reocc
                 dayDifference = todayDate.DayNumber - newDate.DayNumber;
             }
         }
+
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch
+        {
+            ViewBag.errorMessage = "Something went wrong updating the transactions.";
+        }
         
-        dbContext.SaveChanges();
         var financeViewModel = new FinanceViewModel(userTransactions);
 
         return View(financeViewModel);
@@ -111,15 +119,79 @@ public class FinanceController(AppDbContext dbContext, ReoccurrenceService reocc
         
         dbContext.Transactions.Add(newTransaction);
         userWithTransactions.TransactionModels.Add(newTransaction);
-        
-        var stateChanges = await dbContext.SaveChangesAsync();
 
-        if (stateChanges == 0)
+        try
+        {
+            await dbContext.SaveChangesAsync();
+            return RedirectToAction("AddTransaction");
+        }
+        catch
         {
             ModelState.AddModelError(string.Empty, "Something went wrong saving the transaction. Please try again.");
             return View(transactionData);
         }
+    }
 
-        return RedirectToAction("AddTransaction");
+    [HttpGet]
+    public IActionResult EditTransaction(int? id)
+    {
+        if (id is null)
+        {
+            return NotFound();
+        }
+
+        var transaction = dbContext.Transactions.FirstOrDefault(t => t.Id == id);
+        
+        if (transaction is null)
+        {
+            return NotFound();
+        }
+        
+        return View(transaction);
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditTransaction([FromForm] TransactionModel transactionData)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View("EditTransaction", transactionData);
+        }
+        
+        var transaction = await dbContext.Transactions.FirstOrDefaultAsync(t => t.Id == transactionData.Id);
+        
+        if (transaction is null)
+        {
+            return NotFound();
+        }
+
+        var canUpdate = await TryUpdateModelAsync(
+            transaction,
+            string.Empty,
+            t => t.IsIncome,
+            t => t.AmountEuro,
+            t => t.Name,
+            t => t.Category,
+            t => t.Date,
+            t => t.CancelDate,
+            t => t.Reoccurrence);
+        
+        if (!canUpdate)
+        {
+            ModelState.AddModelError(string.Empty, "Something went wrong updating the transaction. Please try again.");
+            return View("EditTransaction", transactionData);
+        }
+
+        try
+        {
+            await dbContext.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+        catch
+        {
+            ModelState.AddModelError(string.Empty, "Something went wrong updating the transaction. Please try again.");
+            return View("EditTransaction", transactionData);
+        }
     }
 }

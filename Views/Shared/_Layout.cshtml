@@ -49,6 +49,10 @@
 </header>
 <div class="container">
     <main role="main" class="pb-3">
+        @if (!string.IsNullOrEmpty(ViewBag.errorMessage))
+        {
+            <p class="alert alert-danger">@ViewBag.errorMessage</p>
+        }
         @RenderBody()
     </main>
 </div>

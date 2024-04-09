@@ -8,22 +8,23 @@ namespace PersonalFinances.Models.DataTransferObjects;
 public class TransactionDto
 {
     [Required]
-    public bool IsIncome { get; init; }
+    public bool IsIncome { get; set; }
     
     [Required, DataType(DataType.Currency), Range(0, double.MaxValue)]
-    public decimal AmountEuro { get; init; }
+    public decimal AmountEuro { get; set; }
 
     [Required, MinLength(3), MaxLength(20)]
-    public string Name { get; init; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
     
     [StringLength(20)]
-    public string? Category { get; init; }
+    public string? Category { get; set; }
     
     [Required]
     [DataType(DataType.Date)]
-    public DateOnly Date { get; init; }
-    public DateOnly? CancelDate { get; init; }
-    public Reoccurrence? Reoccurrence { get; init; }
+    public DateOnly Date { get; set; }
+    [DataType(DataType.Date)]
+    public DateOnly? CancelDate { get; set; }
+    public Reoccurrence? Reoccurrence { get; set; }
 
     [BindNever]
     public static List<SelectListItem> ReoccurrenceOptions { get; }
