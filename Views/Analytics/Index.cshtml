@@ -1,14 +1,123 @@
-﻿@model List<TransactionModel>
+﻿@model PersonalFinances.Models.ViewModels.AnalyticsViewModel
 
 @{
     ViewBag.Title = "Analytics";
     Layout = "_Layout";
+    
+    var todayDate = DateOnly.FromDateTime(DateTime.Now);
+    var daysInThisMonth = DateTime.DaysInMonth(todayDate.Year, todayDate.Month);
+    decimal avgDailyIncomeThisMonth = 0;
+    decimal avgDailyExpenseThisMonth = 0;
+    decimal avgDailyChangeTotal = 0;
+    decimal avgMonthlyIncome = 0;
+    decimal avgMonthlyChangeTotal = 0;
+    decimal incomeThisMonth = 0;
+    decimal expenseThisMonth = 0;
+    decimal totalThisMonth = 0;
+    List<string> groupNames = [];
+    List<decimal> monthlyChanges = [];
+
+    if (Model.SortedTransactionGroups.Count > 0)
+    {
+        var totalDays = todayDate.DayNumber - Model.SortedTransactionGroups.Last().Transactions.Last().Date.DayNumber + 1;
+        avgDailyIncomeThisMonth = Model.SortedTransactionGroups.First().TotalIncome / todayDate.Day;
+        avgDailyExpenseThisMonth = Model.SortedTransactionGroups.First().TotalExpenses / todayDate.Day;
+        avgDailyChangeTotal = Model.SortedTransactionGroups.Sum(g => g.Total) / totalDays;
+        avgMonthlyIncome = Model.SortedTransactionGroups.Sum(g => g.TotalIncome) / Model.SortedTransactionGroups.Count;
+        avgMonthlyChangeTotal = Model.SortedTransactionGroups.Sum(g => g.Total) / Model.SortedTransactionGroups.Count;
+        incomeThisMonth = Model.SortedTransactionGroups.First().TotalIncome;
+        expenseThisMonth = Model.SortedTransactionGroups.First().TotalExpenses;
+        totalThisMonth = Model.SortedTransactionGroups.First().Total;
+        
+        groupNames = Model.SortedTransactionGroups.Select(g => g.MonthYear).Reverse().ToList();
+        monthlyChanges = Model.SortedTransactionGroups.Select(g => g.Total).Reverse().ToList();
+    }
+    
+    var dailyChangePrefix = avgDailyChangeTotal > 0 ? "+" : "";
+    var monthlyChangePrefix = avgMonthlyChangeTotal > 0 ? "+" : "";
+    var savingGoal = Model.SavingGoal.MonthlySavingGoal;
+
+    var labels = Json.Serialize(groupNames);
+    var data = Json.Serialize(monthlyChanges);
+    var savingGoalMemes = Json.Serialize(monthlyChanges.Select(_ => savingGoal).ToList());
 }
 
 <h2>Analytics</h2>
+<hr/>
 
-<div id="chartContainer">
+<div class="my-3 d-flex flex-row flex-nowrap">
+  <div class="w-50">
+    <h3>All Time</h3>
+
+    <p>Average Daily Change: @(dailyChangePrefix)@avgDailyChangeTotal.ToString("F2") €</p>
+    <p>Average Monthly Change: @(monthlyChangePrefix)@avgMonthlyChangeTotal.ToString("F2") €</p>
+    <p>Average Monthly Income: +@avgMonthlyIncome.ToString("F2") €</p>
+  </div>
+  <div class="w-50">
+    <h3>This Month</h3>
+
+    <p>Average Daily Income: @avgDailyIncomeThisMonth.ToString("F2") €</p>
+    <p>Average Daily Expense: @avgDailyExpenseThisMonth.ToString("F2") €</p>
+  </div>
+</div>
+
+<hr/>
+
+<div class="my-3 d-flex flex-row flex-nowrap">
+  <div class="w-50">
+    <h3>Saving Goal</h3>
+    <p>Monthly Saving Goal: @savingGoal.ToString("F2") €</p>
+    <p>On average, you can spend @((avgMonthlyIncome - savingGoal).ToString("F2"))€ a month to meet your saving goal.</p>
+    <p>This month, you can spend a total of @((incomeThisMonth - savingGoal).ToString("F2"))€ to meet your saving goal.</p>
+    <p>On average, you can spend a total of @(((incomeThisMonth - savingGoal) / daysInThisMonth).ToString("F2"))€ daily this month to meet your saving goal.</p>
+    <strong>You're spending @(expenseThisMonth.ToString("F2"))€ this month</strong>
+  </div>
+  <div class="w-50">
+    <partial name="_SavingGoalForm" model="@Model"/>
+  </div>
+</div>
+
+
+@if (totalThisMonth >= savingGoal)
+{
+  <p class="alert alert-success my-3">
+    So far you are meeting your saving goal this month! You have @((totalThisMonth - savingGoal).ToString("F2"))€ to spend
+  </p>
+}
+else
+{
+  <p class="alert alert-danger my-3">
+    You are off your saving goal by @((savingGoal - totalThisMonth).ToString("F2"))€ this month
+  </p>
+}
+
+@if (avgMonthlyChangeTotal >= savingGoal)
+{
+  <p class="alert alert-success my-3">
+    On average, you are meeting your saving goal! You could spend @((avgMonthlyChangeTotal - savingGoal).ToString("F2"))€ a month more
+  </p>
+}
+else
+{
+  <p class="alert alert-danger my-3">
+    On average, you are off your saving goal by @((savingGoal - avgMonthlyChangeTotal).ToString("F2"))€ a month
+  </p>
+}
+
+<div class="w-100 d-flex flex-row">
+  <div id="chartContainer" class="w-75">
     <canvas id="chart"></canvas>
+  </div>
+  <div class="w-25">
+    @if (savingGoal > totalThisMonth)
+    {
+      <img class="w-100" src="https://i.kym-cdn.com/photos/images/original/001/779/895/752.jpg" alt="meme man"/>
+    }
+    else
+    {
+      <img class="w-100" src="https://compote.slate.com/images/926e5009-c10a-48fe-b90e-fa0760f82fcd.png" alt="meme man"/>
+    }
+  </div>
 </div>
 
 @section scripts {
@@ -17,19 +126,34 @@
       const ctx = document.getElementById('chart');
 
       new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-          }]
+          labels: @Html.Raw(labels),
+          datasets: [
+            {
+              label: 'Monthly Change',
+              data: @Html.Raw(data),
+              borderWidth: 1,
+              borderColor: 'blue'
+            },
+            {
+              label: 'Saving Goal',
+              data: @Html.Raw(savingGoalMemes),
+              borderWidth: 1,
+              borderDash: [5, 5],
+              borderColor: 'green'
+            }
+          ]
         },
         options: {
           scales: {
             y: {
-              beginAtZero: true
+              beginAtZero: true,
+              ticks: {
+                callback: function(value, index, values) {
+                  return value + ' €';
+                }
+              }
             }
           }
         }

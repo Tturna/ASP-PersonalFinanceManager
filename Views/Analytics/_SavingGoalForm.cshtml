@@ -1,0 +1,11 @@
+﻿@model PersonalFinances.Models.ViewModels.AnalyticsViewModel
+
+<form asp-controller="Analytics" asp-action="SetMonthlySavingGoal">
+  <div class="form-floating mb-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for="SavingGoal.MonthlySavingGoal" class="form-control"/>
+    <label asp-for="SavingGoal.MonthlySavingGoal" class="form-label">Monthly Saving Goal</label>
+    <span asp-validation-for="SavingGoal.MonthlySavingGoal" class="text-danger"></span>
+  </div>
+  <input type="submit" value="Set Saving Goal" class="btn btn-primary"/>
+</form>

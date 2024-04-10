@@ -12,7 +12,7 @@ The aim is to utilize each and every phase we've gone through, meaning that you 
     ✔️Anti-forgery token validation
     ✔️Partial views
     ✔️Ajax call
-    Data visualization library
+    ✔️Data visualization library
     ✔️A database (SQL or Mongo)
     Optional: Blazor component
 

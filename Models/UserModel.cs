@@ -9,6 +9,7 @@ public class UserModel
     public required string Username { get; set; }
     public required byte[] PasswordHash { get; set; }
     public DateTime CreatedAt { get; set; }
+    public decimal? MonthlySavingGoal { get; set; }
 
     // nav property
     public List<TransactionModel> TransactionModels { get; set; } = [];

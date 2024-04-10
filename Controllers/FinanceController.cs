@@ -103,7 +103,8 @@ public class FinanceController(AppDbContext dbContext, ReoccurrenceService reocc
         }
 
         var todayDate = DateOnly.FromDateTime(DateTime.Now);
-        var date = transactionData.Date == default ? todayDate : transactionData.Date;
+        var date = transactionData.Date == DateOnly.MinValue ? todayDate : transactionData.Date;
+        // TODO: Implement end time for recurring transactions
 
         var newTransaction = new TransactionModel
         {
@@ -152,7 +153,6 @@ public class FinanceController(AppDbContext dbContext, ReoccurrenceService reocc
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    // TODO: Authorize only the user who created the transaction
     public async Task<IActionResult> EditTransaction([FromForm] TransactionModel transactionData)
     {
         if (!ModelState.IsValid)
@@ -234,12 +234,11 @@ public class FinanceController(AppDbContext dbContext, ReoccurrenceService reocc
         try
         {
             await dbContext.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return StatusCode(201);
         }
         catch
         {
-            ModelState.AddModelError(string.Empty, "Something went wrong deleting the transaction. Please try again.");
-            return View("Index");
+            return StatusCode(500);
         }
     }
 }

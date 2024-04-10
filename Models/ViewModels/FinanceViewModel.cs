@@ -4,16 +4,6 @@ namespace PersonalFinances.Models.ViewModels;
 
 public class FinanceViewModel
 {
-    public class TransactionGroup
-    {
-        public required string MonthYear { get; init; }
-        public bool IsCurrentMonth { get; init; }
-        public List<TransactionModel> Transactions { get; init; } = [];
-        public decimal TotalIncome { get; init; }
-        public decimal TotalExpenses { get; init; }
-        public decimal Total { get; init; }
-    }
-    
     public List<TransactionGroup> SortedTransactionGroups { get; init; }
     public List<TransactionModel> ExpectedTransactionsThisMonth { get; init; }
     public TransactionGroup ExpectedTransactionGroupNextMonth { get; init; }
@@ -37,7 +27,7 @@ public class FinanceViewModel
                 Transactions = g.ToList(),
                 TotalIncome = g.Where(t => t.IsIncome).Sum(t => t.AmountEuro),
                 TotalExpenses = g.Where(t => !t.IsIncome).Sum(t => t.AmountEuro),
-                Total = g.Sum(t => t.AmountEuro)
+                Total = g.Sum(t => t.AmountEuro * (t.IsIncome ? 1 : -1))
             })
             .ToList();
         
@@ -98,7 +88,15 @@ public class FinanceViewModel
         foreach (var transaction in uniqueTransactions)
         {
             var trDate = transaction.Date;
-            if (transaction.Reoccurrence == Reoccurrence.Daily)
+
+            if (transaction.Reoccurrence is null or Reoccurrence.None)
+            {
+                if (trDate.DayNumber - today.DayNumber > 0)
+                {
+                    ExpectedTransactionsThisMonth.Add(transaction);
+                }
+            }
+            else if (transaction.Reoccurrence == Reoccurrence.Daily)
             {
                 for (var i = 0; i < daysLeftInMonth; i++)
                 {
@@ -177,5 +175,8 @@ public class FinanceViewModel
         }
         
         ExpectedTransactionsThisMonth = ExpectedTransactionsThisMonth.OrderByDescending(t => t.Date).ToList();
+        ExpectedTransactionGroupNextMonth.Transactions = ExpectedTransactionGroupNextMonth.Transactions
+            .OrderByDescending(t => t.Date)
+            .ToList();
     }
 }
